@@ -40,3 +40,6 @@ GROUP BY away_team
 ORDER BY SUM(away_score) DESC
 LIMIT 10;
 
+--Filtro 2018 a 2022
+
+WHERE date >= '2018-01-01' <= '2023-01-01';
