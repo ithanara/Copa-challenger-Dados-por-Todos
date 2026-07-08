@@ -131,7 +131,7 @@ FROM matches_simple;
 DROP VIEW IF EXISTS matches_shootout;
 CREATE VIEW matches_shootout AS
 
--- perspectiva do time de casa
+-- Perspectiva do time da casa
 SELECT
     Year,
     home_team AS team,
@@ -143,81 +143,90 @@ SELECT
     CASE
         WHEN home_penalty_shootout_goal_long IS NULL OR home_penalty_shootout_goal_long = '' THEN 0
         ELSE LENGTH(home_penalty_shootout_goal_long)
-             - LENGTH(REPLACE(home_penalty_shootout_goal_long, ',', ''))
-             + 1
+             - LENGTH(REPLACE(home_penalty_shootout_goal_long, ',', '')) + 1
     END AS penalty_goal,
 
     CASE
         WHEN away_penalty_shootout_goal_long IS NULL OR away_penalty_shootout_goal_long = '' THEN 0
         ELSE LENGTH(away_penalty_shootout_goal_long)
-             - LENGTH(REPLACE(away_penalty_shootout_goal_long, ',', ''))
-             + 1
+             - LENGTH(REPLACE(away_penalty_shootout_goal_long, ',', '')) + 1
     END AS opponent_penalty_goal,
 
     CASE
         WHEN home_penalty_shootout_miss_long IS NULL OR home_penalty_shootout_miss_long = '' THEN 0
         ELSE LENGTH(home_penalty_shootout_miss_long)
-             - LENGTH(REPLACE(home_penalty_shootout_miss_long, ',', ''))
-             + 1
+             - LENGTH(REPLACE(home_penalty_shootout_miss_long, ',', '')) + 1
     END AS penalty_miss,
 
     CASE
         WHEN away_penalty_shootout_miss_long IS NULL OR away_penalty_shootout_miss_long = '' THEN 0
         ELSE LENGTH(away_penalty_shootout_miss_long)
-             - LENGTH(REPLACE(away_penalty_shootout_miss_long, ',', ''))
-             + 1
+             - LENGTH(REPLACE(away_penalty_shootout_miss_long, ',', '')) + 1
     END AS opponent_penalty_miss,
+
     Score,
     Round,
     1 AS is_home
 
 FROM matches
-WHERE Year >= 2018 AND goal_difference = 0 AND round <> 'Group stage'
+WHERE Year >= 2018
+  AND home_score = away_score
+  AND Round <> 'Group stage'
 
 UNION ALL
 
--- Perspectiva do oponente
+-- Perspectiva do time visitante
 SELECT
     Year,
-    home_team AS opponent,
     away_team AS team,
-    home_score AS goals_against,
+    home_team AS opponent,
     away_score AS goals,
-    home_score - away_score AS goal_difference,
-
-    CASE
-        WHEN home_penalty_shootout_goal_long IS NULL OR home_penalty_shootout_goal_long = '' THEN 0
-        ELSE LENGTH(home_penalty_shootout_goal_long)
-             - LENGTH(REPLACE(home_penalty_shootout_goal_long, ',', ''))
-             + 1
-    END AS opponent_penalty_goal,
+    home_score AS goals_against,
+    away_score - home_score AS goal_difference,
 
     CASE
         WHEN away_penalty_shootout_goal_long IS NULL OR away_penalty_shootout_goal_long = '' THEN 0
         ELSE LENGTH(away_penalty_shootout_goal_long)
-             - LENGTH(REPLACE(away_penalty_shootout_goal_long, ',', ''))
-             + 1
+             - LENGTH(REPLACE(away_penalty_shootout_goal_long, ',', '')) + 1
     END AS penalty_goal,
 
     CASE
-        WHEN home_penalty_shootout_miss_long IS NULL OR home_penalty_shootout_miss_long = '' THEN 0
-        ELSE LENGTH(home_penalty_shootout_miss_long)
-             - LENGTH(REPLACE(home_penalty_shootout_miss_long, ',', ''))
-             + 1
-    END AS opponent_penalty_miss,
+        WHEN home_penalty_shootout_goal_long IS NULL OR home_penalty_shootout_goal_long = '' THEN 0
+        ELSE LENGTH(home_penalty_shootout_goal_long)
+             - LENGTH(REPLACE(home_penalty_shootout_goal_long, ',', '')) + 1
+    END AS opponent_penalty_goal,
 
     CASE
         WHEN away_penalty_shootout_miss_long IS NULL OR away_penalty_shootout_miss_long = '' THEN 0
         ELSE LENGTH(away_penalty_shootout_miss_long)
-             - LENGTH(REPLACE(away_penalty_shootout_miss_long, ',', ''))
-             + 1
+             - LENGTH(REPLACE(away_penalty_shootout_miss_long, ',', '')) + 1
     END AS penalty_miss,
+
+    CASE
+        WHEN home_penalty_shootout_miss_long IS NULL OR home_penalty_shootout_miss_long = '' THEN 0
+        ELSE LENGTH(home_penalty_shootout_miss_long)
+             - LENGTH(REPLACE(home_penalty_shootout_miss_long, ',', '')) + 1
+    END AS opponent_penalty_miss,
+
     Score,
     Round,
     0 AS is_home
 
 FROM matches
-WHERE Year >= 2018 AND goal_difference = 0 AND round <> 'Group stage';
+WHERE Year >= 2018
+  AND home_score = away_score
+  AND Round <> 'Group stage';
 
 SELECT * 
 FROM matches_shootout;
+
+SELECT
+    team,
+    opponent,
+    goals,
+    goals_against,
+    is_home
+FROM matches_shootout
+WHERE
+    (team = 'Croatia' AND opponent = 'Brazil')
+ OR (team = 'Brazil' AND opponent = 'Croatia');

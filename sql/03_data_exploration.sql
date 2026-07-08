@@ -229,7 +229,7 @@ ORDER BY SUM(away_score) DESC
 LIMIT 10;
 
 -- 2018 a 2022
--- Top scorers playing as mandante
+-- Top scorers como mandante
 SELECT home_team,
        SUM(home_score) AS 'gols 18 a 22'
 FROM matches
@@ -254,16 +254,46 @@ SELECT home_team,
        COUNT  (DISTINCT(away_team))
 FROM matches;
 
+--xg médio vs quantidade média de gols
+SELECT
+    home_team,
+    COUNT(*) AS matches,
+    ROUND(AVG(home_score), 2) AS avg_goals,
+    ROUND(AVG(home_xg), 2) AS avg_xg
+FROM matches
+WHERE Year >= 2018
+GROUP BY home_team
+ORDER BY avg_xg DESC;
+
+SELECT
+    away_team,
+    COUNT(*) AS matches,
+    ROUND(AVG(away_score), 2) AS avg_goals,
+    ROUND(AVG(away_xg), 2) AS avg_xg
+FROM matches
+WHERE Year >= 2018
+GROUP BY away_team
+ORDER BY avg_xg DESC;
+
+-- xg - quantidade de gols
+SELECT
+    home_team,
+    ROUND(SUM(home_score - home_xg),2) AS goal_minus_xg
+FROM matches
+WHERE Year >= 2018
+GROUP BY home_team
+ORDER BY goal_minus_xg DESC;
+
+SELECT
+    away_team,
+    ROUND(SUM(away_score - away_xg),2) AS goal_minus_xg
+FROM matches
+WHERE Year >= 2018
+GROUP BY away_team
+ORDER BY goal_minus_xg DESC;
 -- ============================================
 -- 03. Matches_simple
 -- ============================================
--- Comparação média de gols por visita e mandante
-SELECT
-    is_home,
-    AVG(goals) AS avg_goals
-FROM matches_simple
-GROUP BY is_home;
-
 -- Cartão x resultado
 SELECT
     result,
@@ -347,3 +377,14 @@ FROM matches_simple
 GROUP BY team
 ORDER BY win_rate DESC;
 
+-- ============================================
+-- 03. Matches_shootout
+-- ============================================
+-- Seleções que mais disputaram penalty
+SELECT
+    team,
+    COUNT(*) AS penalty_shootouts
+FROM matches_shootout
+GROUP BY team;
+
+select * from matches_shootout;
