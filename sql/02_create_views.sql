@@ -220,13 +220,3 @@ WHERE Year >= 2018
 SELECT * 
 FROM matches_shootout;
 
-SELECT
-    team,
-    opponent,
-    goals,
-    goals_against,
-    is_home
-FROM matches_shootout
-WHERE
-    (team = 'Croatia' AND opponent = 'Brazil')
- OR (team = 'Brazil' AND opponent = 'Croatia');

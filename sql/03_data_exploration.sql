@@ -380,11 +380,38 @@ ORDER BY win_rate DESC;
 -- ============================================
 -- 03. Matches_shootout
 -- ============================================
--- Seleções que mais disputaram penalty
+-- Seleções que mais disputaram penalty entre 18 e 22
 SELECT
     team,
     COUNT(*) AS penalty_shootouts
 FROM matches_shootout
-GROUP BY team;
+GROUP BY team
+ORDER BY penalty_shootouts DESC;
 
-select * from matches_shootout;
+-- Média de gols marcados e perdidos em penalty
+SELECT
+    team,
+    ROUND(AVG(penalty_goal),2) AS avg_goals,
+    ROUND(AVG(penalty_miss),2) AS avg_miss,
+    COUNT(*) AS matches
+FROM matches_shootout
+GROUP BY team
+ORDER BY avg_goals DESC;
+
+-- eficiência
+SELECT
+    team,
+    SUM(penalty_goal) AS goals,
+    SUM(penalty_miss) AS misses,
+    ROUND(
+        100.0 * SUM(penalty_goal) /
+        (SUM(penalty_goal) + SUM(penalty_miss)),
+        1
+    ) AS conversion_rate,
+    COUNT(*) AS shootouts
+FROM matches_shootout
+GROUP BY team
+ORDER BY conversion_rate DESC;
+
+SELECT * 
+FROM matches_shootout;

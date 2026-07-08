@@ -10,6 +10,8 @@ FROM sqlite_master;
 PRAGMA table_info(ranking_2022);
 PRAGMA table_info(world_cup);
 PRAGMA table_info(matches);
+PRAGMA table_info(matches_simple);
+PRAGMA table_info(matches_shootout);
 
 -- ============================================
 -- 03. contagens
