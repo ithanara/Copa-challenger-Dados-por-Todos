@@ -1,0 +1,1571 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "id": "5d0f880a",
+   "metadata": {
+    "papermill": {
+     "duration": 0.004688,
+     "end_time": "2026-07-09T14:25:42.327105+00:00",
+     "exception": false,
+     "start_time": "2026-07-09T14:25:42.322417+00:00",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "EDA\n",
+    "\n",
+    "Entender profundamente os dados e preparar a base para análises avançadas.\n",
+    "\n",
+    "Nesta etapa os participantes deverão:\n",
+    "\n",
+    "Tratar valores ausentes\n",
+    "Identificar inconsistências\n",
+    "Detectar outliers\n",
+    "Construir visualizações\n",
+    "Gerar insights relevantes\n",
+    "\n",
+    "Ferramentas sugeridas:\n",
+    "\n",
+    "Python\n",
+    "Pandas\n",
+    "NumPy\n",
+    "Matplotlib\n",
+    "Plotly"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "373b4a84",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2026-07-09T14:25:42.336306Z",
+     "iopub.status.busy": "2026-07-09T14:25:42.335944Z",
+     "iopub.status.idle": "2026-07-09T14:25:43.186364Z",
+     "shell.execute_reply": "2026-07-09T14:25:43.185435Z"
+    },
+    "papermill": {
+     "duration": 0.85759,
+     "end_time": "2026-07-09T14:25:43.188513+00:00",
+     "exception": false,
+     "start_time": "2026-07-09T14:25:42.330923+00:00",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "import sqlite3\n",
+    "import pandas as pd\n",
+    "import numpy as np\n",
+    "import matplotlib.pyplot as plt"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "565a6b87",
+   "metadata": {
+    "papermill": {
+     "duration": 0.003594,
+     "end_time": "2026-07-09T14:25:43.195919+00:00",
+     "exception": false,
+     "start_time": "2026-07-09T14:25:43.192325+00:00",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "# Connect SQL database"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "id": "d33f861e",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2026-07-09T14:25:43.205967Z",
+     "iopub.status.busy": "2026-07-09T14:25:43.205068Z",
+     "iopub.status.idle": "2026-07-09T14:25:43.217184Z",
+     "shell.execute_reply": "2026-07-09T14:25:43.216306Z"
+    },
+    "papermill": {
+     "duration": 0.019228,
+     "end_time": "2026-07-09T14:25:43.219270+00:00",
+     "exception": false,
+     "start_time": "2026-07-09T14:25:43.200042+00:00",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "conn = sqlite3.connect(\"/kaggle/input/datasets/thainarameneghelli/copa-challenger-db/copa_challenger.db\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "id": "3d637a83",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2026-07-09T14:25:43.228653Z",
+     "iopub.status.busy": "2026-07-09T14:25:43.227995Z",
+     "iopub.status.idle": "2026-07-09T14:25:43.273555Z",
+     "shell.execute_reply": "2026-07-09T14:25:43.272453Z"
+    },
+    "papermill": {
+     "duration": 0.052478,
+     "end_time": "2026-07-09T14:25:43.275533+00:00",
+     "exception": false,
+     "start_time": "2026-07-09T14:25:43.223055+00:00",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>type</th>\n",
+       "      <th>name</th>\n",
+       "      <th>sql</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>table</td>\n",
+       "      <td>matches</td>\n",
+       "      <td>CREATE TABLE \"matches\" (\\n\"home_team\" TEXT,\\n ...</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>table</td>\n",
+       "      <td>ranking_2022</td>\n",
+       "      <td>CREATE TABLE \"ranking_2022\" (\\n\"team\" TEXT,\\n ...</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>table</td>\n",
+       "      <td>world_cup</td>\n",
+       "      <td>CREATE TABLE \"world_cup\" (\\n\"Year\" INTEGER,\\n ...</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>view</td>\n",
+       "      <td>matches_shootout</td>\n",
+       "      <td>CREATE VIEW matches_shootout AS\\n\\n-- Perspect...</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>view</td>\n",
+       "      <td>matches_simple</td>\n",
+       "      <td>CREATE VIEW matches_simple AS\\n\\n-- perspectiv...</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "    type              name                                                sql\n",
+       "0  table           matches  CREATE TABLE \"matches\" (\\n\"home_team\" TEXT,\\n ...\n",
+       "1  table      ranking_2022  CREATE TABLE \"ranking_2022\" (\\n\"team\" TEXT,\\n ...\n",
+       "2  table         world_cup  CREATE TABLE \"world_cup\" (\\n\"Year\" INTEGER,\\n ...\n",
+       "3   view  matches_shootout  CREATE VIEW matches_shootout AS\\n\\n-- Perspect...\n",
+       "4   view    matches_simple  CREATE VIEW matches_simple AS\\n\\n-- perspectiv..."
+      ]
+     },
+     "execution_count": 3,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "pd.read_sql(\"\"\"\n",
+    "SELECT\n",
+    "    type,\n",
+    "    name,\n",
+    "    sql\n",
+    "FROM sqlite_master\n",
+    "ORDER BY type, name;\n",
+    "\"\"\", conn)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "8aa1cff7",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2026-07-09T14:25:43.285067Z",
+     "iopub.status.busy": "2026-07-09T14:25:43.284737Z",
+     "iopub.status.idle": "2026-07-09T14:25:43.365183Z",
+     "shell.execute_reply": "2026-07-09T14:25:43.364380Z"
+    },
+    "papermill": {
+     "duration": 0.087522,
+     "end_time": "2026-07-09T14:25:43.367039+00:00",
+     "exception": false,
+     "start_time": "2026-07-09T14:25:43.279517+00:00",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>team</th>\n",
+       "      <th>team_code</th>\n",
+       "      <th>association</th>\n",
+       "      <th>rank</th>\n",
+       "      <th>previous_rank</th>\n",
+       "      <th>points</th>\n",
+       "      <th>previous_points</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>Brazil</td>\n",
+       "      <td>BRA</td>\n",
+       "      <td>CONMEBOL</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1841.30</td>\n",
+       "      <td>1837.56</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>Belgium</td>\n",
+       "      <td>BEL</td>\n",
+       "      <td>UEFA</td>\n",
+       "      <td>2</td>\n",
+       "      <td>2</td>\n",
+       "      <td>1816.71</td>\n",
+       "      <td>1821.92</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>Argentina</td>\n",
+       "      <td>ARG</td>\n",
+       "      <td>CONMEBOL</td>\n",
+       "      <td>3</td>\n",
+       "      <td>3</td>\n",
+       "      <td>1773.88</td>\n",
+       "      <td>1770.65</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>France</td>\n",
+       "      <td>FRA</td>\n",
+       "      <td>UEFA</td>\n",
+       "      <td>4</td>\n",
+       "      <td>4</td>\n",
+       "      <td>1759.78</td>\n",
+       "      <td>1764.85</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>England</td>\n",
+       "      <td>ENG</td>\n",
+       "      <td>UEFA</td>\n",
+       "      <td>5</td>\n",
+       "      <td>5</td>\n",
+       "      <td>1728.47</td>\n",
+       "      <td>1737.46</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "        team team_code association  rank  previous_rank   points  \\\n",
+       "0     Brazil       BRA    CONMEBOL     1              1  1841.30   \n",
+       "1    Belgium       BEL        UEFA     2              2  1816.71   \n",
+       "2  Argentina       ARG    CONMEBOL     3              3  1773.88   \n",
+       "3     France       FRA        UEFA     4              4  1759.78   \n",
+       "4    England       ENG        UEFA     5              5  1728.47   \n",
+       "\n",
+       "   previous_points  \n",
+       "0          1837.56  \n",
+       "1          1821.92  \n",
+       "2          1770.65  \n",
+       "3          1764.85  \n",
+       "4          1737.46  "
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    },
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Year</th>\n",
+       "      <th>Host</th>\n",
+       "      <th>Teams</th>\n",
+       "      <th>Champion</th>\n",
+       "      <th>Runner-Up</th>\n",
+       "      <th>TopScorrer</th>\n",
+       "      <th>Attendance</th>\n",
+       "      <th>AttendanceAvg</th>\n",
+       "      <th>Matches</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>2022</td>\n",
+       "      <td>Qatar</td>\n",
+       "      <td>32</td>\n",
+       "      <td>Argentina</td>\n",
+       "      <td>France</td>\n",
+       "      <td>Kylian Mbappé - 8</td>\n",
+       "      <td>3404252</td>\n",
+       "      <td>53191</td>\n",
+       "      <td>64</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>2018</td>\n",
+       "      <td>Russia</td>\n",
+       "      <td>32</td>\n",
+       "      <td>France</td>\n",
+       "      <td>Croatia</td>\n",
+       "      <td>Harry Kane - 6</td>\n",
+       "      <td>3031768</td>\n",
+       "      <td>47371</td>\n",
+       "      <td>64</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>2014</td>\n",
+       "      <td>Brazil</td>\n",
+       "      <td>32</td>\n",
+       "      <td>Germany</td>\n",
+       "      <td>Argentina</td>\n",
+       "      <td>James Rodríguez - 6</td>\n",
+       "      <td>3429873</td>\n",
+       "      <td>53592</td>\n",
+       "      <td>64</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>2010</td>\n",
+       "      <td>South Africa</td>\n",
+       "      <td>32</td>\n",
+       "      <td>Spain</td>\n",
+       "      <td>Netherlands</td>\n",
+       "      <td>Wesley Sneijder, Thomas Müller... - 5</td>\n",
+       "      <td>3178856</td>\n",
+       "      <td>49670</td>\n",
+       "      <td>64</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>2006</td>\n",
+       "      <td>Germany</td>\n",
+       "      <td>32</td>\n",
+       "      <td>Italy</td>\n",
+       "      <td>France</td>\n",
+       "      <td>Miroslav Klose - 5</td>\n",
+       "      <td>3352605</td>\n",
+       "      <td>52384</td>\n",
+       "      <td>64</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   Year          Host  Teams   Champion    Runner-Up  \\\n",
+       "0  2022         Qatar     32  Argentina       France   \n",
+       "1  2018        Russia     32     France      Croatia   \n",
+       "2  2014        Brazil     32    Germany    Argentina   \n",
+       "3  2010  South Africa     32      Spain  Netherlands   \n",
+       "4  2006       Germany     32      Italy       France   \n",
+       "\n",
+       "                              TopScorrer  Attendance  AttendanceAvg  Matches  \n",
+       "0                      Kylian Mbappé - 8     3404252          53191       64  \n",
+       "1                         Harry Kane - 6     3031768          47371       64  \n",
+       "2                    James Rodríguez - 6     3429873          53592       64  \n",
+       "3  Wesley Sneijder, Thomas Müller... - 5     3178856          49670       64  \n",
+       "4                     Miroslav Klose - 5     3352605          52384       64  "
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    },
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Year</th>\n",
+       "      <th>team</th>\n",
+       "      <th>opponent</th>\n",
+       "      <th>goals</th>\n",
+       "      <th>goals_against</th>\n",
+       "      <th>goal_difference</th>\n",
+       "      <th>xg</th>\n",
+       "      <th>xg_against</th>\n",
+       "      <th>penalty</th>\n",
+       "      <th>opponent_penalty</th>\n",
+       "      <th>Round</th>\n",
+       "      <th>is_home</th>\n",
+       "      <th>result</th>\n",
+       "      <th>yellow_cards</th>\n",
+       "      <th>yellow_red_cards</th>\n",
+       "      <th>red_cards</th>\n",
+       "      <th>opponent_yellow_cards</th>\n",
+       "      <th>opponent_yellow_red_cards</th>\n",
+       "      <th>opponent_red_cards</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>2022</td>\n",
+       "      <td>Argentina</td>\n",
+       "      <td>France</td>\n",
+       "      <td>3</td>\n",
+       "      <td>3</td>\n",
+       "      <td>0</td>\n",
+       "      <td>3.3</td>\n",
+       "      <td>2.2</td>\n",
+       "      <td>4.0</td>\n",
+       "      <td>2.0</td>\n",
+       "      <td>Final</td>\n",
+       "      <td>1</td>\n",
+       "      <td>Draw</td>\n",
+       "      <td>5</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>3</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>2022</td>\n",
+       "      <td>Croatia</td>\n",
+       "      <td>Morocco</td>\n",
+       "      <td>2</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0.7</td>\n",
+       "      <td>1.2</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>Third-place match</td>\n",
+       "      <td>1</td>\n",
+       "      <td>Win</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>2</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>2022</td>\n",
+       "      <td>France</td>\n",
+       "      <td>Morocco</td>\n",
+       "      <td>2</td>\n",
+       "      <td>0</td>\n",
+       "      <td>2</td>\n",
+       "      <td>2.0</td>\n",
+       "      <td>0.9</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>Semi-finals</td>\n",
+       "      <td>1</td>\n",
+       "      <td>Win</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>2022</td>\n",
+       "      <td>Argentina</td>\n",
+       "      <td>Croatia</td>\n",
+       "      <td>3</td>\n",
+       "      <td>0</td>\n",
+       "      <td>3</td>\n",
+       "      <td>2.3</td>\n",
+       "      <td>0.5</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>Semi-finals</td>\n",
+       "      <td>1</td>\n",
+       "      <td>Win</td>\n",
+       "      <td>2</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>2</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>2022</td>\n",
+       "      <td>Morocco</td>\n",
+       "      <td>Portugal</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1.4</td>\n",
+       "      <td>0.9</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>NaN</td>\n",
+       "      <td>Quarter-finals</td>\n",
+       "      <td>1</td>\n",
+       "      <td>Win</td>\n",
+       "      <td>2</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   Year       team  opponent  goals  goals_against  goal_difference   xg  \\\n",
+       "0  2022  Argentina    France      3              3                0  3.3   \n",
+       "1  2022    Croatia   Morocco      2              1                1  0.7   \n",
+       "2  2022     France   Morocco      2              0                2  2.0   \n",
+       "3  2022  Argentina   Croatia      3              0                3  2.3   \n",
+       "4  2022    Morocco  Portugal      1              0                1  1.4   \n",
+       "\n",
+       "   xg_against  penalty  opponent_penalty              Round  is_home result  \\\n",
+       "0         2.2      4.0               2.0              Final        1   Draw   \n",
+       "1         1.2      NaN               NaN  Third-place match        1    Win   \n",
+       "2         0.9      NaN               NaN        Semi-finals        1    Win   \n",
+       "3         0.5      NaN               NaN        Semi-finals        1    Win   \n",
+       "4         0.9      NaN               NaN     Quarter-finals        1    Win   \n",
+       "\n",
+       "   yellow_cards  yellow_red_cards  red_cards  opponent_yellow_cards  \\\n",
+       "0             5                 0          0                      3   \n",
+       "1             0                 0          0                      2   \n",
+       "2             0                 0          0                      1   \n",
+       "3             2                 0          0                      2   \n",
+       "4             2                 1          0                      1   \n",
+       "\n",
+       "   opponent_yellow_red_cards  opponent_red_cards  \n",
+       "0                          0                   0  \n",
+       "1                          0                   0  \n",
+       "2                          0                   0  \n",
+       "3                          0                   0  \n",
+       "4                          0                   0  "
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    },
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Year</th>\n",
+       "      <th>team</th>\n",
+       "      <th>opponent</th>\n",
+       "      <th>goals</th>\n",
+       "      <th>goals_against</th>\n",
+       "      <th>goal_difference</th>\n",
+       "      <th>penalty_goal</th>\n",
+       "      <th>opponent_penalty_goal</th>\n",
+       "      <th>penalty_miss</th>\n",
+       "      <th>opponent_penalty_miss</th>\n",
+       "      <th>Score</th>\n",
+       "      <th>Round</th>\n",
+       "      <th>is_home</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>2022</td>\n",
+       "      <td>Argentina</td>\n",
+       "      <td>France</td>\n",
+       "      <td>3</td>\n",
+       "      <td>3</td>\n",
+       "      <td>0</td>\n",
+       "      <td>4</td>\n",
+       "      <td>2</td>\n",
+       "      <td>0</td>\n",
+       "      <td>2</td>\n",
+       "      <td>(4) 3–3 (2)</td>\n",
+       "      <td>Final</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>2022</td>\n",
+       "      <td>Croatia</td>\n",
+       "      <td>Brazil</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>4</td>\n",
+       "      <td>2</td>\n",
+       "      <td>0</td>\n",
+       "      <td>2</td>\n",
+       "      <td>(4) 1–1 (2)</td>\n",
+       "      <td>Quarter-finals</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>2022</td>\n",
+       "      <td>Netherlands</td>\n",
+       "      <td>Argentina</td>\n",
+       "      <td>2</td>\n",
+       "      <td>2</td>\n",
+       "      <td>0</td>\n",
+       "      <td>3</td>\n",
+       "      <td>4</td>\n",
+       "      <td>2</td>\n",
+       "      <td>1</td>\n",
+       "      <td>(3) 2–2 (4)</td>\n",
+       "      <td>Quarter-finals</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>2022</td>\n",
+       "      <td>Morocco</td>\n",
+       "      <td>Spain</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>0</td>\n",
+       "      <td>3</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>3</td>\n",
+       "      <td>(3) 0–0 (0)</td>\n",
+       "      <td>Round of 16</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>2022</td>\n",
+       "      <td>Japan</td>\n",
+       "      <td>Croatia</td>\n",
+       "      <td>1</td>\n",
+       "      <td>1</td>\n",
+       "      <td>0</td>\n",
+       "      <td>1</td>\n",
+       "      <td>3</td>\n",
+       "      <td>3</td>\n",
+       "      <td>1</td>\n",
+       "      <td>(1) 1–1 (3)</td>\n",
+       "      <td>Round of 16</td>\n",
+       "      <td>1</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   Year         team   opponent  goals  goals_against  goal_difference  \\\n",
+       "0  2022    Argentina     France      3              3                0   \n",
+       "1  2022      Croatia     Brazil      1              1                0   \n",
+       "2  2022  Netherlands  Argentina      2              2                0   \n",
+       "3  2022      Morocco      Spain      0              0                0   \n",
+       "4  2022        Japan    Croatia      1              1                0   \n",
+       "\n",
+       "   penalty_goal  opponent_penalty_goal  penalty_miss  opponent_penalty_miss  \\\n",
+       "0             4                      2             0                      2   \n",
+       "1             4                      2             0                      2   \n",
+       "2             3                      4             2                      1   \n",
+       "3             3                      0             1                      3   \n",
+       "4             1                      3             3                      1   \n",
+       "\n",
+       "         Score           Round  is_home  \n",
+       "0  (4) 3–3 (2)           Final        1  \n",
+       "1  (4) 1–1 (2)  Quarter-finals        1  \n",
+       "2  (3) 2–2 (4)  Quarter-finals        1  \n",
+       "3  (3) 0–0 (0)     Round of 16        1  \n",
+       "4  (1) 1–1 (3)     Round of 16        1  "
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "# Carregar tabelas e views\n",
+    "ranking = pd.read_sql(\"SELECT * FROM ranking_2022;\", conn)\n",
+    "world_cup = pd.read_sql(\"SELECT * FROM world_cup;\", conn)\n",
+    "matches_simple = pd.read_sql(\"SELECT * FROM matches_simple;\", conn)\n",
+    "matches_shootout = pd.read_sql(\"SELECT * FROM matches_shootout;\", conn)\n",
+    "\n",
+    "# Preview\n",
+    "display(ranking.head())\n",
+    "display(world_cup.head())\n",
+    "display(matches_simple.head())\n",
+    "display(matches_shootout.head())"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "21cc94cc",
+   "metadata": {
+    "papermill": {
+     "duration": 0.005177,
+     "end_time": "2026-07-09T14:25:43.378070+00:00",
+     "exception": false,
+     "start_time": "2026-07-09T14:25:43.372893+00:00",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "# Data Quality"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "d91d88b2",
+   "metadata": {
+    "papermill": {
+     "duration": 0.004636,
+     "end_time": "2026-07-09T14:25:43.387359+00:00",
+     "exception": false,
+     "start_time": "2026-07-09T14:25:43.382723+00:00",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "## Missing values"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "id": "5cc19196",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2026-07-09T14:25:43.398425Z",
+     "iopub.status.busy": "2026-07-09T14:25:43.398073Z",
+     "iopub.status.idle": "2026-07-09T14:25:43.406830Z",
+     "shell.execute_reply": "2026-07-09T14:25:43.406005Z"
+    },
+    "papermill": {
+     "duration": 0.016744,
+     "end_time": "2026-07-09T14:25:43.408766+00:00",
+     "exception": false,
+     "start_time": "2026-07-09T14:25:43.392022+00:00",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "team               0\n",
+       "team_code          0\n",
+       "association        0\n",
+       "rank               0\n",
+       "previous_rank      0\n",
+       "points             0\n",
+       "previous_points    0\n",
+       "dtype: int64"
+      ]
+     },
+     "execution_count": 5,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "ranking.isna().sum()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "id": "af48badd",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2026-07-09T14:25:43.419986Z",
+     "iopub.status.busy": "2026-07-09T14:25:43.419659Z",
+     "iopub.status.idle": "2026-07-09T14:25:43.426786Z",
+     "shell.execute_reply": "2026-07-09T14:25:43.425970Z"
+    },
+    "papermill": {
+     "duration": 0.014857,
+     "end_time": "2026-07-09T14:25:43.428529+00:00",
+     "exception": false,
+     "start_time": "2026-07-09T14:25:43.413672+00:00",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Year             0\n",
+       "Host             0\n",
+       "Teams            0\n",
+       "Champion         0\n",
+       "Runner-Up        0\n",
+       "TopScorrer       0\n",
+       "Attendance       0\n",
+       "AttendanceAvg    0\n",
+       "Matches          0\n",
+       "dtype: int64"
+      ]
+     },
+     "execution_count": 6,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "world_cup.isna().sum()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "e1892d97",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2026-07-09T14:25:43.440042Z",
+     "iopub.status.busy": "2026-07-09T14:25:43.439669Z",
+     "iopub.status.idle": "2026-07-09T14:25:43.447918Z",
+     "shell.execute_reply": "2026-07-09T14:25:43.447024Z"
+    },
+    "papermill": {
+     "duration": 0.016444,
+     "end_time": "2026-07-09T14:25:43.449867+00:00",
+     "exception": false,
+     "start_time": "2026-07-09T14:25:43.433423+00:00",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "Year                           0\n",
+       "team                           0\n",
+       "opponent                       0\n",
+       "goals                          0\n",
+       "goals_against                  0\n",
+       "goal_difference                0\n",
+       "xg                             0\n",
+       "xg_against                     0\n",
+       "penalty                      238\n",
+       "opponent_penalty             238\n",
+       "Round                          0\n",
+       "is_home                        0\n",
+       "result                         0\n",
+       "yellow_cards                   0\n",
+       "yellow_red_cards               0\n",
+       "red_cards                      0\n",
+       "opponent_yellow_cards          0\n",
+       "opponent_yellow_red_cards      0\n",
+       "opponent_red_cards             0\n",
+       "dtype: int64"
+      ]
+     },
+     "execution_count": 7,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "matches_simple.isna().sum()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "a4f3411f",
+   "metadata": {
+    "papermill": {
+     "duration": 0.004978,
+     "end_time": "2026-07-09T14:25:43.459773+00:00",
+     "exception": false,
+     "start_time": "2026-07-09T14:25:43.454795+00:00",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "## Duplicates"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 8,
+   "id": "fb57c95c",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2026-07-09T14:25:43.471368Z",
+     "iopub.status.busy": "2026-07-09T14:25:43.471025Z",
+     "iopub.status.idle": "2026-07-09T14:25:43.481763Z",
+     "shell.execute_reply": "2026-07-09T14:25:43.480808Z"
+    },
+    "papermill": {
+     "duration": 0.019064,
+     "end_time": "2026-07-09T14:25:43.483798+00:00",
+     "exception": false,
+     "start_time": "2026-07-09T14:25:43.464734+00:00",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "np.int64(0)"
+      ]
+     },
+     "execution_count": 8,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "ranking.duplicated().sum()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "id": "c7397f32",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2026-07-09T14:25:43.495989Z",
+     "iopub.status.busy": "2026-07-09T14:25:43.495343Z",
+     "iopub.status.idle": "2026-07-09T14:25:43.502591Z",
+     "shell.execute_reply": "2026-07-09T14:25:43.501806Z"
+    },
+    "papermill": {
+     "duration": 0.015307,
+     "end_time": "2026-07-09T14:25:43.504316+00:00",
+     "exception": false,
+     "start_time": "2026-07-09T14:25:43.489009+00:00",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "np.int64(0)"
+      ]
+     },
+     "execution_count": 9,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "world_cup.duplicated().sum()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "id": "92433b30",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2026-07-09T14:25:43.516367Z",
+     "iopub.status.busy": "2026-07-09T14:25:43.515988Z",
+     "iopub.status.idle": "2026-07-09T14:25:43.523511Z",
+     "shell.execute_reply": "2026-07-09T14:25:43.522704Z"
+    },
+    "papermill": {
+     "duration": 0.015774,
+     "end_time": "2026-07-09T14:25:43.525266+00:00",
+     "exception": false,
+     "start_time": "2026-07-09T14:25:43.509492+00:00",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "np.int64(0)"
+      ]
+     },
+     "execution_count": 10,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "matches_simple.duplicated().sum()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "2d686417",
+   "metadata": {
+    "papermill": {
+     "duration": 0.005098,
+     "end_time": "2026-07-09T14:25:43.535736+00:00",
+     "exception": false,
+     "start_time": "2026-07-09T14:25:43.530638+00:00",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "## Data types"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "id": "d2d000fa",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2026-07-09T14:25:43.547723Z",
+     "iopub.status.busy": "2026-07-09T14:25:43.547344Z",
+     "iopub.status.idle": "2026-07-09T14:25:43.562027Z",
+     "shell.execute_reply": "2026-07-09T14:25:43.560992Z"
+    },
+    "papermill": {
+     "duration": 0.023338,
+     "end_time": "2026-07-09T14:25:43.564373+00:00",
+     "exception": false,
+     "start_time": "2026-07-09T14:25:43.541035+00:00",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "<class 'pandas.core.frame.DataFrame'>\n",
+      "RangeIndex: 211 entries, 0 to 210\n",
+      "Data columns (total 7 columns):\n",
+      " #   Column           Non-Null Count  Dtype  \n",
+      "---  ------           --------------  -----  \n",
+      " 0   team             211 non-null    object \n",
+      " 1   team_code        211 non-null    object \n",
+      " 2   association      211 non-null    object \n",
+      " 3   rank             211 non-null    int64  \n",
+      " 4   previous_rank    211 non-null    int64  \n",
+      " 5   points           211 non-null    float64\n",
+      " 6   previous_points  211 non-null    float64\n",
+      "dtypes: float64(2), int64(2), object(3)\n",
+      "memory usage: 11.7+ KB\n"
+     ]
+    }
+   ],
+   "source": [
+    "ranking.info()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "id": "4e67441d",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2026-07-09T14:25:43.578019Z",
+     "iopub.status.busy": "2026-07-09T14:25:43.577684Z",
+     "iopub.status.idle": "2026-07-09T14:25:43.587322Z",
+     "shell.execute_reply": "2026-07-09T14:25:43.586333Z"
+    },
+    "papermill": {
+     "duration": 0.018115,
+     "end_time": "2026-07-09T14:25:43.589064+00:00",
+     "exception": false,
+     "start_time": "2026-07-09T14:25:43.570949+00:00",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "<class 'pandas.core.frame.DataFrame'>\n",
+      "RangeIndex: 22 entries, 0 to 21\n",
+      "Data columns (total 9 columns):\n",
+      " #   Column         Non-Null Count  Dtype \n",
+      "---  ------         --------------  ----- \n",
+      " 0   Year           22 non-null     int64 \n",
+      " 1   Host           22 non-null     object\n",
+      " 2   Teams          22 non-null     int64 \n",
+      " 3   Champion       22 non-null     object\n",
+      " 4   Runner-Up      22 non-null     object\n",
+      " 5   TopScorrer     22 non-null     object\n",
+      " 6   Attendance     22 non-null     int64 \n",
+      " 7   AttendanceAvg  22 non-null     int64 \n",
+      " 8   Matches        22 non-null     int64 \n",
+      "dtypes: int64(5), object(4)\n",
+      "memory usage: 1.7+ KB\n"
+     ]
+    }
+   ],
+   "source": [
+    "world_cup.info()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "id": "b4e87308",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2026-07-09T14:25:43.601755Z",
+     "iopub.status.busy": "2026-07-09T14:25:43.601383Z",
+     "iopub.status.idle": "2026-07-09T14:25:43.611098Z",
+     "shell.execute_reply": "2026-07-09T14:25:43.610182Z"
+    },
+    "papermill": {
+     "duration": 0.018632,
+     "end_time": "2026-07-09T14:25:43.613048+00:00",
+     "exception": false,
+     "start_time": "2026-07-09T14:25:43.594416+00:00",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "<class 'pandas.core.frame.DataFrame'>\n",
+      "RangeIndex: 256 entries, 0 to 255\n",
+      "Data columns (total 19 columns):\n",
+      " #   Column                     Non-Null Count  Dtype  \n",
+      "---  ------                     --------------  -----  \n",
+      " 0   Year                       256 non-null    int64  \n",
+      " 1   team                       256 non-null    object \n",
+      " 2   opponent                   256 non-null    object \n",
+      " 3   goals                      256 non-null    int64  \n",
+      " 4   goals_against              256 non-null    int64  \n",
+      " 5   goal_difference            256 non-null    int64  \n",
+      " 6   xg                         256 non-null    float64\n",
+      " 7   xg_against                 256 non-null    float64\n",
+      " 8   penalty                    18 non-null     float64\n",
+      " 9   opponent_penalty           18 non-null     float64\n",
+      " 10  Round                      256 non-null    object \n",
+      " 11  is_home                    256 non-null    int64  \n",
+      " 12  result                     256 non-null    object \n",
+      " 13  yellow_cards               256 non-null    int64  \n",
+      " 14  yellow_red_cards           256 non-null    int64  \n",
+      " 15  red_cards                  256 non-null    int64  \n",
+      " 16  opponent_yellow_cards      256 non-null    int64  \n",
+      " 17  opponent_yellow_red_cards  256 non-null    int64  \n",
+      " 18  opponent_red_cards         256 non-null    int64  \n",
+      "dtypes: float64(4), int64(11), object(4)\n",
+      "memory usage: 38.1+ KB\n"
+     ]
+    }
+   ],
+   "source": [
+    "matches_simple.info()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "id": "d2761048",
+   "metadata": {
+    "papermill": {
+     "duration": 0.005376,
+     "end_time": "2026-07-09T14:25:43.623949+00:00",
+     "exception": false,
+     "start_time": "2026-07-09T14:25:43.618573+00:00",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "source": [
+    "## Statistical summary"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 14,
+   "id": "5da6e0e2",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2026-07-09T14:25:43.636724Z",
+     "iopub.status.busy": "2026-07-09T14:25:43.636028Z",
+     "iopub.status.idle": "2026-07-09T14:25:43.646651Z",
+     "shell.execute_reply": "2026-07-09T14:25:43.645764Z"
+    },
+    "papermill": {
+     "duration": 0.019062,
+     "end_time": "2026-07-09T14:25:43.648477+00:00",
+     "exception": false,
+     "start_time": "2026-07-09T14:25:43.629415+00:00",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "<bound method NDFrame.describe of                        team team_code association  rank  previous_rank  \\\n",
+       "0                    Brazil       BRA    CONMEBOL     1              1   \n",
+       "1                   Belgium       BEL        UEFA     2              2   \n",
+       "2                 Argentina       ARG    CONMEBOL     3              3   \n",
+       "3                    France       FRA        UEFA     4              4   \n",
+       "4                   England       ENG        UEFA     5              5   \n",
+       "..                      ...       ...         ...   ...            ...   \n",
+       "206               Sri Lanka       SRI         AFC   207            207   \n",
+       "207       US Virgin Islands       VIR    CONCACAF   208            208   \n",
+       "208  British Virgin Islands       VGB    CONCACAF   209            209   \n",
+       "209                Anguilla       AIA    CONCACAF   210            210   \n",
+       "210              San Marino       SMR        UEFA   211            211   \n",
+       "\n",
+       "      points  previous_points  \n",
+       "0    1841.30          1837.56  \n",
+       "1    1816.71          1821.92  \n",
+       "2    1773.88          1770.65  \n",
+       "3    1759.78          1764.85  \n",
+       "4    1728.47          1737.46  \n",
+       "..       ...              ...  \n",
+       "206   825.25           825.25  \n",
+       "207   823.97           823.97  \n",
+       "208   809.32           809.32  \n",
+       "209   790.74           790.74  \n",
+       "210   762.22           763.82  \n",
+       "\n",
+       "[211 rows x 7 columns]>"
+      ]
+     },
+     "execution_count": 14,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "ranking.describe"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "id": "fdad1179",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2026-07-09T14:25:43.661306Z",
+     "iopub.status.busy": "2026-07-09T14:25:43.660986Z",
+     "iopub.status.idle": "2026-07-09T14:25:43.670141Z",
+     "shell.execute_reply": "2026-07-09T14:25:43.669153Z"
+    },
+    "papermill": {
+     "duration": 0.017975,
+     "end_time": "2026-07-09T14:25:43.672074+00:00",
+     "exception": false,
+     "start_time": "2026-07-09T14:25:43.654099+00:00",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "<bound method NDFrame.describe of     Year                   Host  Teams      Champion       Runner-Up  \\\n",
+       "0   2022                  Qatar     32     Argentina          France   \n",
+       "1   2018                 Russia     32        France         Croatia   \n",
+       "2   2014                 Brazil     32       Germany       Argentina   \n",
+       "3   2010           South Africa     32         Spain     Netherlands   \n",
+       "4   2006                Germany     32         Italy          France   \n",
+       "5   2002  Korea Republic, Japan     32        Brazil         Germany   \n",
+       "6   1998                 France     32        France          Brazil   \n",
+       "7   1994          United States     24        Brazil           Italy   \n",
+       "8   1990                  Italy     24  West Germany       Argentina   \n",
+       "9   1986                 Mexico     24     Argentina    West Germany   \n",
+       "10  1982                  Spain     24         Italy    West Germany   \n",
+       "11  1978              Argentina     16     Argentina     Netherlands   \n",
+       "12  1974                Germany     16  West Germany     Netherlands   \n",
+       "13  1970                 Mexico     16        Brazil           Italy   \n",
+       "14  1966                England     16       England    West Germany   \n",
+       "15  1962                  Chile     16        Brazil  Czechoslovakia   \n",
+       "16  1958                 Sweden     16        Brazil          Sweden   \n",
+       "17  1954            Switzerland     16       Germany         Hungary   \n",
+       "18  1950                 Brazil     15       Uruguay          Brazil   \n",
+       "19  1938                 France     16         Italy         Hungary   \n",
+       "20  1934                  Italy     16         Italy  Czechoslovakia   \n",
+       "21  1930                Uruguay     13       Uruguay       Argentina   \n",
+       "\n",
+       "                               TopScorrer  Attendance  AttendanceAvg  Matches  \n",
+       "0                       Kylian Mbappé - 8     3404252          53191       64  \n",
+       "1                          Harry Kane - 6     3031768          47371       64  \n",
+       "2                     James Rodríguez - 6     3429873          53592       64  \n",
+       "3   Wesley Sneijder, Thomas Müller... - 5     3178856          49670       64  \n",
+       "4                      Miroslav Klose - 5     3352605          52384       64  \n",
+       "5                             Ronaldo - 8     2705337          42271       64  \n",
+       "6                         Davor Šuker - 6     2903477          45367       64  \n",
+       "7      Hristo Stoichkov, Oleg Salenko - 6     3587538          68991       52  \n",
+       "8                 Salvatore Schillaci - 6     2516215          48389       52  \n",
+       "9                        Gary Lineker - 6     2394031          46039       52  \n",
+       "10                        Paolo Rossi - 6     2109723          40572       52  \n",
+       "11                       Mario Kempes - 6     1545791          40679       38  \n",
+       "12                      Grzegorz Lato - 7     1865753          49099       38  \n",
+       "13                       Gerd Müller - 10     1603975          50124       32  \n",
+       "14                            Eusébio - 9     1563135          48848       32  \n",
+       "15  Leonel Sánchez, Flórián Albert... - 4      893172          27912       32  \n",
+       "16                     Just Fontaine - 13      819810          23423       35  \n",
+       "17                     Sándor Kocsis - 11      768607          29562       26  \n",
+       "18                             Ademir - 8     1045246          47511       22  \n",
+       "19                           Leônidas - 7      375700          20872       18  \n",
+       "20                    Oldřich Nejedlý - 5      363000          21353       17  \n",
+       "21                  Guillermo Stábile - 8      590549          32808       18  >"
+      ]
+     },
+     "execution_count": 15,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "world_cup.describe"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "id": "124d4f89",
+   "metadata": {
+    "execution": {
+     "iopub.execute_input": "2026-07-09T14:25:43.685276Z",
+     "iopub.status.busy": "2026-07-09T14:25:43.684648Z",
+     "iopub.status.idle": "2026-07-09T14:25:43.697087Z",
+     "shell.execute_reply": "2026-07-09T14:25:43.696210Z"
+    },
+    "papermill": {
+     "duration": 0.021174,
+     "end_time": "2026-07-09T14:25:43.698916+00:00",
+     "exception": false,
+     "start_time": "2026-07-09T14:25:43.677742+00:00",
+     "status": "completed"
+    },
+    "tags": []
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "<bound method NDFrame.describe of      Year          team  opponent  goals  goals_against  goal_difference   xg  \\\n",
+       "0    2022     Argentina    France      3              3                0  3.3   \n",
+       "1    2022       Croatia   Morocco      2              1                1  0.7   \n",
+       "2    2022        France   Morocco      2              0                2  2.0   \n",
+       "3    2022     Argentina   Croatia      3              0                3  2.3   \n",
+       "4    2022       Morocco  Portugal      1              0                1  1.4   \n",
+       "..    ...           ...       ...    ...            ...              ...  ...   \n",
+       "251  2018       Nigeria   Croatia      0              2               -2  0.7   \n",
+       "252  2018       Uruguay     Egypt      1              0                1  1.6   \n",
+       "253  2018       IR Iran   Morocco      1              0                1  1.0   \n",
+       "254  2018         Spain  Portugal      3              3                0  1.6   \n",
+       "255  2018  Saudi Arabia    Russia      0              5               -5  0.2   \n",
+       "\n",
+       "     xg_against  penalty  opponent_penalty              Round  is_home result  \\\n",
+       "0           2.2      4.0               2.0              Final        1   Draw   \n",
+       "1           1.2      NaN               NaN  Third-place match        1    Win   \n",
+       "2           0.9      NaN               NaN        Semi-finals        1    Win   \n",
+       "3           0.5      NaN               NaN        Semi-finals        1    Win   \n",
+       "4           0.9      NaN               NaN     Quarter-finals        1    Win   \n",
+       "..          ...      ...               ...                ...      ...    ...   \n",
+       "251         1.5      NaN               NaN        Group stage        0   Loss   \n",
+       "252         0.3      NaN               NaN        Group stage        0    Win   \n",
+       "253         0.7      NaN               NaN        Group stage        0    Win   \n",
+       "254         1.2      NaN               NaN        Group stage        0   Draw   \n",
+       "255         1.7      NaN               NaN        Group stage        0   Loss   \n",
+       "\n",
+       "     yellow_cards  yellow_red_cards  red_cards  opponent_yellow_cards  \\\n",
+       "0               5                 0          0                      3   \n",
+       "1               0                 0          0                      2   \n",
+       "2               0                 0          0                      1   \n",
+       "3               2                 0          0                      2   \n",
+       "4               2                 1          0                      1   \n",
+       "..            ...               ...        ...                    ...   \n",
+       "251             1                 0          0                      2   \n",
+       "252             0                 0          0                      2   \n",
+       "253             3                 0          0                      1   \n",
+       "254             1                 0          0                      1   \n",
+       "255             1                 0          0                      1   \n",
+       "\n",
+       "     opponent_yellow_red_cards  opponent_red_cards  \n",
+       "0                            0                   0  \n",
+       "1                            0                   0  \n",
+       "2                            0                   0  \n",
+       "3                            0                   0  \n",
+       "4                            0                   0  \n",
+       "..                         ...                 ...  \n",
+       "251                          0                   0  \n",
+       "252                          0                   0  \n",
+       "253                          0                   0  \n",
+       "254                          0                   0  \n",
+       "255                          0                   0  \n",
+       "\n",
+       "[256 rows x 19 columns]>"
+      ]
+     },
+     "execution_count": 16,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "matches_simple.describe"
+   ]
+  }
+ ],
+ "metadata": {
+  "kaggle": {
+   "accelerator": "none",
+   "dataSources": [],
+   "dockerImageVersionId": 28755,
+   "isGpuEnabled": false,
+   "isInternetEnabled": false,
+   "language": "python",
+   "sourceType": "notebook"
+  },
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.12.13"
+  },
+  "papermill": {
+   "default_parameters": {},
+   "duration": 4.740828,
+   "end_time": "2026-07-09T14:25:44.123709+00:00",
+   "environment_variables": {},
+   "exception": null,
+   "input_path": "__notebook__.ipynb",
+   "output_path": "__notebook__.ipynb",
+   "parameters": {},
+   "start_time": "2026-07-09T14:25:39.382881+00:00",
+   "version": "2.7.0"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
