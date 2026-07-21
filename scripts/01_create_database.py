@@ -35,3 +35,5 @@ world_cup.to_sql(
 )
 
 conn.close()
+
+# %%

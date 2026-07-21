@@ -35,10 +35,8 @@ Ao fim dessa etapa, decidi que eu estava interessada em investigar a relação d
 
 # Missão 3
 
-Com os principais insights identificados na etapa exploratória, foi desenvolvido um dashboard no Power BI com o objetivo de transformar os resultados obtidos em uma ferramenta interativa de análise.
+Com os principais insights identificados na etapa exploratória, foi desenvolvido um dashboard no Power BI com o objetivo de transformar os resultados obtidos em uma ferramenta interativa de análise. Durante esta etapa percebi que os nomes das seleções em ranking e matches não seguiam os mesmos padrões, por isso precisei retornar à etapa 2 e criar um dicionário com o nome padronizado dos países.
 
-O dashboard foi estruturado para permitir diferentes perspectivas sobre os dados das Copas do Mundo de 2018 e 2022, reunindo indicadores gerais, rankings, comparações entre seleções e análises sobre o comportamento das partidas.
-
-Além da apresentação dos indicadores, o dashboard foi pensado como parte do storytelling do projeto, conduzindo o usuário desde uma visão geral da competição até análises mais específicas relacionadas ao desempenho das equipes, evolução do ranking FIFA e comportamento disciplinar das partidas.
+O dashboard foi estruturado para permitir diferentes perspectivas sobre os dados das Copas do Mundo de 2018 e 2022, reunindo indicadores gerais, rankings, comparações entre seleções, confederações e análises sobre a distribuição de cartões das partidas.
 
 Essa etapa também serviu como validação das análises realizadas anteriormente, permitindo confirmar visualmente diversos padrões encontrados durante a EDA e preparando a base para a etapa final de modelagem preditiva.
