@@ -12,4 +12,33 @@ Após criada a database, dei início à análise geral dos dados utilizando SQL 
 
 Decidi criar uma view para facilitar informações de ranking da tabela matches.
 
-Nossa é muito trabalhoso documentar tudo aqui. Vou confiar nas mensagens dos meus commits e depois consolidar as informações.... :|
+# Missão 2
+
+Após estruturar e compreender a base de dados, iniciei a Análise Exploratória de Dados (EDA) utilizando Python e SQL. O objetivo dessa etapa foi entender melhor o comportamento das seleções e identificar padrões que pudessem ser utilizados tanto no dashboard quanto na etapa de Machine Learning.
+
+Como os dados já apresentavam boa qualidade, não foi necessário realizar um tratamento extensivo de valores ausentes. O foco passou a ser a criação de novas variáveis e a padronização das informações entre as tabelas, garantindo consistência para as análises.
+
+Durante a exploração foram investigados aspectos como:
+
+- desempenho das seleções nas Copas de 2018 e 2022;
+- evolução do ranking FIFA;
+- quantidade de gols por fase do campeonato;
+- distribuição de cartões amarelos e vermelhos;
+- partidas decididas por disputa de pênaltis;
+- desempenho por confederação.
+
+Também foram construídas diversas visualizações utilizando Matplotlib e Plotly para compreender a distribuição das variáveis e identificar possíveis relações entre elas. Essa etapa foi importante para levantar hipóteses que posteriormente serviram de base para a construção do dashboard e da solução preditiva.
+
+Além das análises descritivas, foram criadas novas métricas derivadas dos dados originais, permitindo enriquecer a base para responder perguntas que não poderiam ser obtidas diretamente das tabelas fornecidas.
+
+Ao fim dessa etapa, decidi que eu estava interessada em investigar a relação dos cartões com o desempenho de cada time e se a fase do campeonato teria relação com a quantidade de cartões, estes apontamentos guiaram meus passos durante as próximas missões.
+
+# Missão 3
+
+Com os principais insights identificados na etapa exploratória, foi desenvolvido um dashboard no Power BI com o objetivo de transformar os resultados obtidos em uma ferramenta interativa de análise.
+
+O dashboard foi estruturado para permitir diferentes perspectivas sobre os dados das Copas do Mundo de 2018 e 2022, reunindo indicadores gerais, rankings, comparações entre seleções e análises sobre o comportamento das partidas.
+
+Além da apresentação dos indicadores, o dashboard foi pensado como parte do storytelling do projeto, conduzindo o usuário desde uma visão geral da competição até análises mais específicas relacionadas ao desempenho das equipes, evolução do ranking FIFA e comportamento disciplinar das partidas.
+
+Essa etapa também serviu como validação das análises realizadas anteriormente, permitindo confirmar visualmente diversos padrões encontrados durante a EDA e preparando a base para a etapa final de modelagem preditiva.

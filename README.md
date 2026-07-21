@@ -10,8 +10,8 @@ https://www.kaggle.com/competitions/copa-challenger-dados-por-todos
 ## Missions
 
 - ✅ Mission 1 — SQL and data understanding
-- 🏃‍♀️ Mission 2 — EDA
-- ⏳ Mission 3 — Dashboard and storytelling
-- ⏳ Mission 4 — AI
+- ✅ Mission 2 — EDA
+- ✅ Mission 3 — Dashboard and storytelling
+- 🏃‍♀️ Mission 4 — AI
 
-🚧 I'm currently working on mission 2, come back later to see my progress as I will document all the steps here =) 
+🚧 I'm currently working on mission 4, come back later to see my progress as I will document all the steps here =) 
