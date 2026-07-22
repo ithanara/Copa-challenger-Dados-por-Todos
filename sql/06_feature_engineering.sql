@@ -1,32 +1,9 @@
-SELECT *
-FROM sqlite_master;
+-- ============================================
+-- 1. view do teste
+-- ============================================
+DROP VIEW IF EXISTS ml_features;
+CREATE VIEW ml_features AS
 
-SELECT 
-    team,
-    team_code,
-    rank,
-    association,
-    points
-FROM ranking_2022;
-
-
-SELECT 
-    team,
-    opponent,
-    year,
-    Round,
-    yellow_cards,
-    red_cards,
-    opponent_yellow_cards,
-    opponent_red_cards,
-    goals,
-    goals_against,
-    goal_difference,
-    result
-FROM matches_simple
-WHERE is_home =1;
-
--- ================================================
 SELECT
 
     CAST(substr(m.year,-2) AS TEXT)
@@ -59,7 +36,6 @@ SELECT
     ro.points    AS opponent_points,
     rt.points - ro.points AS points_difference,
 
-
     m.yellow_cards,
     m.yellow_red_cards,
     m.red_cards,
@@ -67,8 +43,21 @@ SELECT
     m.opponent_yellow_red_cards,
     m.opponent_red_cards,
 
-    -- dados históricos
+    -- dados históricos do time
+    ts.games_last2wc,
+    ts.total_cards AS team_total_cards,
+    ts.avg_yellow AS team_avg_yellow,
+    ts.avg_yellow_red AS team_avg_yellow_red,
+    ts.avg_red AS team_avg_red,
+    ts.avg_total_cards AS team_avg_total_cards,
 
+    -- dados históricos do adversário
+    os.games_last2wc AS opponent_games_last2wc,
+    os.total_cards AS opponent_total_cards,
+    os.avg_yellow AS opponent_avg_yellow,
+    os.avg_yellow_red AS opponent_avg_yellow_red,
+    os.avg_red AS opponent_avg_red,
+    os.avg_total_cards AS opponent_avg_total_cards,
 
     -- esse vai ser o target
     (m.yellow_cards + m.yellow_red_cards + m.red_cards 
@@ -83,4 +72,13 @@ LEFT JOIN ranking_2022 rt
 LEFT JOIN ranking_2022 ro
     ON m.opponent = ro.team
 
+LEFT JOIN team_stats ts
+    ON m.team = ts.team
+
+LEFT JOIN team_stats os
+    ON m.opponent = os.team
+
 WHERE is_home = 1;
+
+SELECT * 
+FROM ml_features;

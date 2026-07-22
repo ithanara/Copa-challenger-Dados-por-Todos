@@ -221,7 +221,7 @@ SELECT *
 FROM matches_shootout;
 
 -- ============================================
--- 023. view do histórico dos times
+-- 3. view do histórico dos times
 -- ============================================
 DROP VIEW IF EXISTS team_stats;
 CREATE VIEW team_stats AS
