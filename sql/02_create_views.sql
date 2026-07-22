@@ -220,3 +220,29 @@ WHERE Year >= 2018
 SELECT * 
 FROM matches_shootout;
 
+-- ============================================
+-- 023. view do histórico dos times
+-- ============================================
+DROP VIEW IF EXISTS team_stats;
+CREATE VIEW team_stats AS
+
+SELECT
+    team,
+    COUNT(*) AS games_last2wc,
+
+    SUM(yellow_cards) AS total_yellow,
+    SUM(yellow_red_cards) AS total_yellow_red,
+    SUM(red_cards) AS total_red,
+    SUM(yellow_cards + yellow_red_cards + red_cards) AS total_cards,
+
+    AVG(yellow_cards) AS avg_yellow,
+    AVG(yellow_red_cards) AS avg_yellow_red,
+    AVG(red_cards) AS avg_red,
+    AVG(yellow_cards + yellow_red_cards + red_cards) AS avg_total_cards
+
+FROM matches_simple
+GROUP BY team;
+
+SELECT * 
+FROM team_stats
+ORDER BY total_cards DESC;

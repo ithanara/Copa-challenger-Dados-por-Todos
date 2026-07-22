@@ -40,3 +40,9 @@ Com os principais insights identificados na etapa exploratória, foi desenvolvid
 O dashboard foi estruturado para permitir diferentes perspectivas sobre os dados das Copas do Mundo de 2018 e 2022, reunindo indicadores gerais, rankings, comparações entre seleções, confederações e análises sobre a distribuição de cartões das partidas.
 
 Essa etapa também serviu como validação das análises realizadas anteriormente, permitindo confirmar visualmente diversos padrões encontrados durante a EDA e preparando a base para a etapa final de modelagem preditiva.
+
+# Missão 4
+
+Dei início à missão 4 criando o arquivo de feature engineering e adicionando a coluna de match id para as partidas, dessa forma é possível facilitar a identificação de partidas na tabela e também evitar que existam duplicadas ao treinar a máquina.
+
+Também foi necessário criar uma nova view que consolidasse os dados históricos de cada time nestas 2 edições da copa que estamos analisando.
