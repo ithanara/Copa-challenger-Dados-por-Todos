@@ -43,6 +43,9 @@ Essa etapa também serviu como validação das análises realizadas anteriorment
 
 # Missão 4
 
-Dei início à missão 4 criando o arquivo de feature engineering e adicionando a coluna de match id para as partidas, dessa forma é possível facilitar a identificação de partidas na tabela e também evitar que existam duplicadas ao treinar a máquina.
+Dei início à missão 4 criando o arquivo de feature engineering e adicionando a coluna de match id para as partidas, dessa forma é possível facilitar a identificação de partidas na tabela e também evitar que existam duplicadas ao treinar a máquina. Também foi necessário criar uma nova view que consolidasse os dados históricos de cada time nestas 2 edições da copa que estamos analisando.
 
-Também foi necessário criar uma nova view que consolidasse os dados históricos de cada time nestas 2 edições da copa que estamos analisando.
+Minha expectativa era de que ao chegar nesta etapa após o fim da copa 2026 já fosse possível acessar também os dados das partidas deste ano no dataset do Kaggle, porém, precisei recorrer a outro dataset mais atualizado para pegar estas informações e encontrei o seguinte material:
+https://www.kaggle.com/datasets/mominullptr/fifa-world-cup-2026-dataset/data
+
+Desta forma posso utilizar os dados de 2018-2022 para treino e os de 2026 para teste. Foi necessário um tratamento básico dos dados para que ambas as tabelas estejam seguindo os mesmos padrões.
