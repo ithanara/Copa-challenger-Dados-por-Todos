@@ -33,6 +33,3 @@ train.dtypes
 
 # última confirmação
 train.describe()
-
-# %%
-#Separar X e y

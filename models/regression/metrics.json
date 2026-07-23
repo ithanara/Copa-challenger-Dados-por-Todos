@@ -1,0 +1,7 @@
+{
+    "model": "RandomForestRegressor",
+    "target": "match_total_cards",
+    "MAE": 1.5149038461538462,
+    "RMSE": 1.8992602304784152,
+    "R2": -0.03237089331075338
+}
