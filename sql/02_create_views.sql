@@ -228,7 +228,7 @@ CREATE VIEW team_stats AS
 
 SELECT
     team,
-    COUNT(*) AS games_last2wc,
+    COUNT(*) AS games,
 
     SUM(yellow_cards) AS total_yellow,
     SUM(yellow_red_cards) AS total_yellow_red,
@@ -245,4 +245,31 @@ GROUP BY team;
 
 SELECT * 
 FROM team_stats
+ORDER BY total_cards DESC;
+
+-- ======================================================
+-- 3. view do histórico dos times (pra validação do ML)
+-- ======================================================
+DROP VIEW IF EXISTS team_stats_2026;
+CREATE VIEW team_stats_2026 AS
+
+SELECT
+    team,
+    COUNT(*) AS games,
+
+    SUM(yellow_cards) AS total_yellow,
+    SUM(yellow_red_cards) AS total_yellow_red,
+    SUM(red_cards) AS total_red,
+    SUM(yellow_cards + yellow_red_cards + red_cards) AS total_cards,
+
+    AVG(yellow_cards) AS avg_yellow,
+    AVG(yellow_red_cards) AS avg_yellow_red,
+    AVG(red_cards) AS avg_red,
+    AVG(yellow_cards + yellow_red_cards + red_cards) AS avg_total_cards
+
+FROM ml_features_2026
+GROUP BY team;
+
+SELECT *
+FROM team_stats_2026
 ORDER BY total_cards DESC;

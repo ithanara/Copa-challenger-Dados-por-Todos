@@ -1,5 +1,5 @@
 -- ============================================
--- 1. view do teste
+-- 1. view do train
 -- ============================================
 DROP VIEW IF EXISTS ml_features;
 CREATE VIEW ml_features AS
@@ -44,7 +44,7 @@ SELECT
     m.opponent_red_cards,
 
     -- dados históricos do time
-    ts.games_last2wc,
+    ts.games,
     ts.total_cards AS team_total_cards,
     ts.avg_yellow AS team_avg_yellow,
     ts.avg_yellow_red AS team_avg_yellow_red,
@@ -52,7 +52,7 @@ SELECT
     ts.avg_total_cards AS team_avg_total_cards,
 
     -- dados históricos do adversário
-    os.games_last2wc AS opponent_games_last2wc,
+    os.games AS opponent_games,
     os.total_cards AS opponent_total_cards,
     os.avg_yellow AS opponent_avg_yellow,
     os.avg_yellow_red AS opponent_avg_yellow_red,
@@ -82,3 +82,65 @@ WHERE is_home = 1;
 
 SELECT * 
 FROM ml_features;
+
+-- ============================================
+-- 1. view do teste
+-- ============================================
+DROP VIEW IF EXISTS ml_features_2026_final;
+CREATE VIEW ml_features_2026_final AS
+
+SELECT 
+    mf.match_id,
+    mf.team,
+    mf.opponent,
+    mf.year,
+    mf.round,
+
+    mf.team_rank,
+    mf.opponent_rank,
+    mf.team_rank - mf.opponent_rank AS rank_difference,
+
+    mf.team_points,
+    mf.opponent_points,
+    mf.team_points - mf.opponent_points AS points_difference,
+
+    mf.yellow_cards,
+    mf.yellow_red_cards,
+    mf.red_cards,
+
+    mf.opponent_yellow_cards,
+    mf.opponent_yellow_red_cards,
+    mf.opponent_red_cards,
+
+    -- dados históricos do time
+    ts.games,
+    ts.total_cards AS team_total_cards,
+    ts.avg_yellow AS team_avg_yellow,
+    ts.avg_yellow_red AS team_avg_yellow_red,
+    ts.avg_red AS team_avg_red,
+    ts.avg_total_cards AS team_avg_total_cards,
+
+    -- dados históricos do adversário
+    ots.games AS opponent_games,
+    ots.total_cards AS opponent_total_cards,
+    ots.avg_yellow AS opponent_avg_yellow,
+    ots.avg_yellow_red AS opponent_avg_yellow_red,
+    ots.avg_red AS opponent_avg_red,
+    ots.avg_total_cards AS opponent_avg_total_cards,
+
+    -- target
+    mf.match_total_cards
+
+
+FROM ml_features_2026 mf
+
+LEFT JOIN team_stats_2026 ts
+    ON mf.team = ts.team
+
+LEFT JOIN team_stats_2026 ots
+    ON mf.opponent = ots.team
+
+WHERE is_home = 1;
+
+SELECT *
+FROM ml_features_2026_final;
