@@ -292,6 +292,3 @@ plt.ylabel("Erro")
 plt.title("Resíduos (Erro × Valor previsto)")
 
 plt.show()
-# %%
-# Escrever as conclusões aqui antes de fechar
-# minha conclusão atual é que esse modelo ficou bem fraquinho mesmo hehe

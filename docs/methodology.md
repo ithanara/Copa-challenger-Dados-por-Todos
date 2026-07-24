@@ -50,6 +50,8 @@ https://www.kaggle.com/datasets/mominullptr/fifa-world-cup-2026-dataset/data
 
 Desta forma posso utilizar os dados de 2018-2022 para treino e os de 2026 para teste. Foi necessário um tratamento básico dos dados para que ambas as tabelas estejam seguindo os mesmos padrões.
 
-Meu primeiro teste com machine learning foi utilizando um modelo de regressão: minha intenção era fazer um teste mais simples, apenas ensinando a máquina a prever a quantidade de cartões por partida e entender qual era a margem de acerto dela com as informações que tenho hoje. Spoiler: temos poucos parâmetros para acertar 100% do tempo, mas até que o teste deu bons resultados.
+Meu primeiro teste com machine learning foi utilizando um modelo de regressão: minha intenção era fazer um teste mais simples, apenas ensinando a máquina a prever a quantidade de cartões por partida e entender qual era a margem de acerto dela com as informações que tenho hoje. Spoiler: acredito que temos poucos dados para acertar, nossa máquina preveu menos da metade dos resultados corretamente.
 
 Tendo esta etapa concluída, agora sim posso fazer o que acho mais interessante, que é utilizar uma classificação de risco das partidas: assim a máquina nos dirá se a partida tem chances altas ou baixas de cartão. Acredito que investindo em uma faixa de resultados, o teste pode ser mais frutífero.
+
+Realmente os testes utilizando o random forest classifier (e a separação de cartões por partida em low, medium e high) foram melhores, ainda não considero que temos bons resultados, mas a máquina acertou um pouquinho mais.
