@@ -136,7 +136,7 @@ print(f"Taxa de acerto: {hits/total:.2%}")
 # salvar modelo
 joblib.dump(
     pipeline,
-    "random_forest_cards_classifier.pkl"
+    MODEL_DIR / "random_forest_cards_classifier.pkl"
 )
 
 # métricas
@@ -147,7 +147,7 @@ metrics = {
 }
 
 with open(
-    "metrics.json",
+    MODEL_DIR / "metrics.json",
     "w"
 ) as f:
     json.dump(metrics, f, indent=4)
@@ -157,13 +157,13 @@ feature_importance.sort_values(
     "importance",
     ascending=False
 ).to_csv(
-    "feature_importance.csv",
+    MODEL_DIR / "feature_importance.csv",
     index=False
 )
 
 # comparação
 comparison.to_csv(
-    "predictions.csv",
+    MODEL_DIR / "predictions.csv",
     index=False
 )
 
